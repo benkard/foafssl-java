@@ -1,0 +1,5 @@
+PREFIX : <.> 
+CONSTRUCT { ?s :hasPrivateKeyFor ?pk . }
+WHERE {
+   ?s :hasPrivateKeyFor ?pk .
+}

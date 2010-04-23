@@ -1,0 +1,30 @@
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+
+
+@prefix : <#> .
+
+:hasPrivateKeyFor a owl:InverseFunctionalProperty;
+    rdfs:comment """
+     D2     This is just the cert:identity relation with a name that makes it
+     easier to understand the relation between the public key and the 
+     private key.
+    """;
+    owl:sameAs cert:identity;
+    rdfs:domain foaf:Agent;
+    rdfs:range cert:PublicKey .
+
+# a definition of :semantics (which one could also perhaps better 
+# name :sense relating # any term, not just a document, to its sense
+# D1
+{ ?resource :representation ?doc .
+  ?doc log:semantics ?graph . } => { ?resource :semantics ?graph . } .
+
+#D3
+#Proving that a document is signed by P, is to assert P claims its contents:
+{ ?P :hasPrivateKeyFor ?key .
+  ?doc :signature [ :signedWith ?key ]
+} => { ?P :claims [ is :semantics of ?doc] }.
+

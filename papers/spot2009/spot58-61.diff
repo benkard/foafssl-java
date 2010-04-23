@@ -1,0 +1,362 @@
+Index: spot2009.tex
+===================================================================
+--- spot2009.tex	(revision 58)
++++ spot2009.tex	(working copy)
+@@ -21,28 +21,28 @@
+ \widowpenalty=50000
+ 
+ %% To comment out for the final version
+-\newcount\hour
+-\newcount\minute
+-\def\Time{\hour=\time
+-          \minute=\time
+-          \divide\hour by60
+-          \ifnum\hour<10 0\fi\number\hour:%
+-          \multiply\hour by60
+-          \advance\minute by -\hour
+-          \ifnum\minute<10 0\fi\number\minute%
+-         }
+-\RequirePackage{rotating}
+-\RequirePackage{graphicx}
+-\RequirePackage{prelim2e}[1996/01/01]
+-\renewcommand*{\PrelimText}{%
+-	\hskip -1.2cm plus -\marginparsep
+-    \begin{rotate}{90}
+-       \rlap{%
+-          \scalebox{0.75}{\textnormal{\texttt{Draft: \today\ -- \Time -- Page \thepage}}}
+-       }%
+-    \end{rotate}
+-    \hskip 0pt plus 1filll
+- }
++%\newcount\hour
++%\newcount\minute
++%\def\Time{\hour=\time
++%          \minute=\time
++%          \divide\hour by60
++%          \ifnum\hour<10 0\fi\number\hour:%
++%          \multiply\hour by60
++%          \advance\minute by -\hour
++%          \ifnum\minute<10 0\fi\number\minute%
++%         }
++%\RequirePackage{rotating}
++%\RequirePackage{graphicx}
++%\RequirePackage{prelim2e}[1996/01/01]
++%\renewcommand*{\PrelimText}{%
++%	\hskip -1.2cm plus -\marginparsep
++%    \begin{rotate}{90}
++%       \rlap{%
++%          \scalebox{0.75}{\textnormal{\texttt{Draft: \today\ -- \Time -- Page \thepage}}}
++%       }%
++%    \end{rotate}
++%    \hskip 0pt plus 1filll
++% }
+ %%%%%%%%%%%%%%%%%%%%%%%%
+ \newcounter{custompropcounter}
+ \newenvironment{customprop}[1]
+@@ -91,22 +91,22 @@
+ 
+ \maketitle
+ \begin{abstract} 
+- We describe a very simple protocol for RESTful authentication, using widely used technolgies such as HTTP, TLS and semantic web vocabularies. 
++ We describe a very simple protocol for RESTful authentication, using widely used technologies such as HTTP, TLS and Semantic Web vocabularies. 
+  After describing each of these technologies and how they come together in FOAF+TLS, we show declaratively the reasoning of a server relying on this authentication mechanism to make authorization decisions.
+ \end{abstract}
+ \section{Introduction}
+ 
+ Many web servers that require authentication rely on centralized systems 
+-(for example backed by an LDAP service) that belong to the same administrative domain as the server.
++(for example, backed by an LDAP service) that belong to the same administrative domain as the server.
+ In this model, the user is restrained to this administrative domain and needs to have an account
+-for each organization. This prevents any linkage on the web between data related to a given
+-user but held within two distinct organizations. In addition, every time a new user needs 
++for each organization. This prevents the creation of any links between data related to a given
++user held within two distinct organizations. In addition, every time a new user needs 
+ authenticated access to a new organization, a new registration needs to be made; this is a burden
+ for both the user and the organization. The process of registration is either (a) minimal ---for example,
+ e-mail address confirmation---, or
+-(b) more in-depth ---for example, in a workplace, where a administrator 
++(b) more in-depth ---for example, in a workplace, where an administrator 
+ has to create an account, after verifications out-of-band. Process (a) is lightweight, but
+-will often be insufficient to provide a basis for authorization, whereas process (b) may be able
++will often provide insufficient information, whereas process (b) may be able
+ to give more information about a user, at the expense of a costly initial verification phase during the
+ registration.
+ 
+@@ -114,18 +114,18 @@
+ for example, aims at sharing accounts across administrative boundaries; it does however rely on
+ a rigid federation process between organizations.
+ A lightweight counterpart to this approach is OpenID, which is mainly capable of authenticating a 
+-user against a URI, but also requires its own protocol and the definition of custom attributes for obtaining more information.
++user against a URI, but also requires its a separate protocol and the definition of custom attributes for obtaining more information about the user.
+ Neither Shibboleth nor OpenID follow the principles of REST, which makes it difficult to gain
+ extra information about a user in the decentralized ways of the Web.
+ 
+ This paper proposes a novel, secure approach which relies on combining the use of TLS client 
+ certificates and Semantic-Web-based FOAF networks. The result is a secure, open and distributed authentication mechanism, which is able
+ to satisfy simple requirements ---such as authenticating a user as by URI, like OpenID--- and
+-more complex requirements, where the authorization to a service depends on knowledge of the position in the social network of the authenticating agent, as inferred from documents containing FOAF relations --- though this can be extended to any information in any vocabulary relevant to the authorization decision. This is possible because the protocol is essentially RESTful, and thus in concordance with the architecture of the Web, the biggest most successful network ever of distributed linked information.
++more complex requirements, where the authorization to a service depends on knowledge of the position in the social network of the authenticating agent, as inferred from documents containing FOAF and other Semantic Web relations. This is made possible as the protocol is essentially RESTful, and thus in accordance with the architecture of the Web, the largest and most successful network of distributed linked information.
+ 
+-Section~\ref{sec:background} introduces the background regarding the Semantic Web and FOAF, as well as
++Section~\ref{sec:background} introduces the background technologies of the Semantic Web and FOAF, as well as
+ cryptography and client-certificate authentication.
+-Section~\ref{sec:foaftlsprotocol} presents the FOAF+SSL protocol.
++Section~\ref{sec:foaftlsprotocol} presents the FOAF+TLS protocol.
+ Section~\ref{sec:other} compares this approach to other approaches.
+ 
+ \section{Background}
+@@ -143,23 +143,23 @@
+ \begin{enumerate}
+ \item The specification of universal names, also known as Universal Resource Identifiers (URI) --- the best known being the subset called Universal Resource Locators (URLs). 
+ \item The mapping of URIs to Resources. This is the reference part of the semantic piece.
+-\item Canonical methods for manipulating these resource mapped by each URIs, via $representations$ of the resource.  Such a protocol specifies a canonical dereferencing mechanism, enabling a holder of a URI to find and manipulate the resource referred to by that URI.  {\tt http://...} URLs have the HTTP protocol as such a dereferencing mechanism for example, through which information about the resource, known as the $representation$ of the resource, can be fetched, the resource can be changed if permitted -- including here creation  or deletion as limiting cases.
++\item Canonical methods for manipulating these resource mapped by each URIs, via {\em representations} of the resource.  Such a protocol specifies a canonical dereferencing mechanism, enabling a holder of a URI to find and manipulate the resource referred to by that URI.  {\tt http://...} URLs use the HTTP protocol as their dereferencing mechanism, for example.  By accessing the object at a given HTTP URL, information about the resource, known as the {\em representation} of the resource, can be fetched.  The resource can be changed if permitted -- including here creation or deletion as limiting cases.
+ \end{enumerate}
+ 
+ REST specifies the architectural style required for building such a protocol, with the aim of maximum networkability; that is, any representation should be able to link to any resource from anywhere using the URI alone to do so. Moreover, any user should be able to reach any part of the system in such a way.
+ 
+ \subsection{The Semantic Web}
+ 
+-Whereas URLs in the initial web of hyperlinked documents referred only to documents, the semantic web specifies how to extend this to enable a web of interlinked resources. In the semantic web, it becomes possible for URLs to refer to anything, be it:
++Whereas URLs in the initial web of hyperlinked documents referred only to documents, the Semantic Web specifies how to extend this to enable a web of interlinked resources. In the Semantic Web, it becomes possible for URLs to refer to anything, be it:
+ \begin{enumerate}
+ \item concrete things like individual people --- e.g. {\tt <http://romeo.net/\#i>} refers to a human named Romeo;
+ \item relations between 2 individuals --- e.g. the relation of knowing someone which {\tt <http://xmlns.com/foaf/0.1/knows>} refers to;
+ \item or classes --- e.g. the set of people: {\tt <http://xmlns.com/foaf/0.1/Person>}.
+ \end{enumerate}
+ 
+-The meaning of these URLs can be found by dereferencing them using their canonical protocol. Thus, doing an HTTP GET on {\tt <http://xmlns.com/foaf/0.1/knows>} should return a representation describing it. As HTTP is built to allow content negotiation, clever web servers will return the representation best fitting the client's needs. Entering the URL cited above in a web browser will indeed return a human readable web page describing the `knows' relation. A semantic web agent could ask for the standard machine-friendly RDF/XML representation and parse it; yet other representations could be returned to describe the same information.
++The meaning of these URLs can be found by dereferencing them using their canonical protocol. Thus, doing an HTTP GET on {\tt <http://xmlns.com/foaf/0.1/knows>} should return a representation describing it. As HTTP is built to allow content negotiation, clever web servers will return the representation best fitting the client's needs. Entering the URL cited above in a web browser will indeed return a human readable web page describing the `knows' relation. A Semantic Web agent could ask for the standard machine-friendly RDF/XML representation and parse it; yet other representations could be returned to describe the same information.
+ 
+-The meaning of any semantic web document is a graph of directed relations between objects. Each relation can be written out as a triple of {\tt <subject> <relation> <object>}. Where each of {\tt subject} , {\tt relation} and {\tt object} can be chosen among any of the URIs,  and object can also be string  literals. As it is tedious to read and write such URLs, this article uses the \footnote{Current N3 documentation at http://www.w3.org/2000/10/swap/doc/Overview.html} {\tt @prefix} notation. The following prefixes will be used throughout this article:
++The meaning of any semantic web document is a graph of directed relations between objects. Each relation exists as a triple of {\tt <subject> <relation> <object>}. Where each of {\tt subject}, {\tt relation} and {\tt object} can be chosen among any of the URIs, and {\tt object} may also be a string literal. As it is tedious to read and write such URLs, this article uses the N3\footnote{Current N3 documentation at: \url{http://www.w3.org/2000/10/swap/doc/Overview.html}.} {\tt @prefix} notation. The following prefixes will be used throughout this article:
+ 
+ \begin{lstlisting}[basicstyle=\rm\scriptsize\ttfamily]
+ @prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@@ -181,7 +181,7 @@
+ }
+ 
+ Each representation returned by a resource can be interpreted as a graph of relations, which can be isolated in N3 by placing them within curly brackets \{ \}.
+-The relation that maps a URI to its meaning is defined as the {\tt log:semantics} relation. Thus, starting with the {\tt r:romeo} URL one can after dereferencing it, state the following, without being obliged to make a commitment as to what appears within the brackets:
++The relation that maps a URI to its meaning is defined as the {\tt log:semantics} relation. Thus, starting with the {\tt r:romeo} URL one can, after dereferencing it, state the following, without being obliged to explicitly assert the actual statements within the brackets as true:
+ 
+ {\footnotesize
+ \begin{verbatim}
+@@ -191,13 +191,13 @@
+ \end{verbatim}
+ }
+ 
+-Even though the semantic web is built in order to make merging of information easy, it is not a requirement to do so. We will be using this notation to help elicit clearly when and for what reason merging graphs is reasonable.
++Even though the Semantic Web is built in order to make merging of information easy, it is not a requirement to do so. We will be using this notation to help illustrate clearly when and for what reason merging graphs is reasonable.
+ 
+ \subsection{FOAF, reputation networks and the web of trust}
+ 
+-{\em FOAF}, short for Friend-of-a-Friend, is an RDF vocabulary to describe people,  agents,  groups and their relations in a practical way. When used on the semantic {\em web}, this allows each person to describe his network of friends.
++{\em FOAF}, short for Friend-of-a-Friend, is an RDF vocabulary used to describe people,  agents,  groups and their relations in a practical way. When used on the Semantic Web, this allows each person to describe his network of friends.
+ 
+-By giving oneself a URL --~{\em aka.} a WebId~-- one can can describe one's personal social network by linking oneself to one's acquaintances by reference. Therefore, if someone had been given the {\tt romeo:i} URL above by Romeo himself, and had found its {\tt log:semantics}, there is good reason for him to trust that the information there is correct, and thus to merge it (in a defeasible manner) with his own belief store. As that graph itself contains further URIs such as {\tt jult:me}'s, the agent could also get its {\tt log:semantics} to find out more about its referent. The thought then is that, if {\em romeo:i} uses a URI, it is because he means to refer to the thing objectively referred to by that URI. By following the canonical way to dereference that URI one should get a representation of that thing. Meaning is objective.
++By giving oneself a URI --~{\em aka.} a WebId~-- one can describe one's personal social network by linking oneself to one's acquaintances by reference. Therefore, if someone had been given the {\tt romeo:i} URL above by Romeo himself, and had found its {\tt log:semantics}, there is good reason for him to trust that the information there is correct, and thus to merge it (in a defeasible manner) with his own belief store. As that graph itself contains further URIs such as {\tt jult:me}'s, the agent could also get its {\tt log:semantics} to find out more about its referent. The thought then is that, if {\em romeo:i} uses a URI, it is because he means to refer to the thing objectively referred to by that URI. By following the canonical way to dereference that URI, one should get a representation of that thing. In this way, meaning of a URI becomes objective.
+ 
+ If the advantages gained by keeping information up-to-date is large enough, a peer-to-peer information network arises, where each person specializes in keeping the information they understand up-to-date and links to the best sources for objects he or she does not control. Current social networking sites such as Facebook and LinkedIn, and older ones such as eBay, have shown how this can work in less distributed settings. In return, as the quality of one's links become better, people will feel more comfortable linking to it. Furthermore, there is an incentive to link to existing resources: less work maintaining that information. 
+ 
+@@ -216,7 +216,7 @@
+ Public key cryptography relies on the conjecture that it is infeasible to
+ obtain any private key that corresponds to a given public key through brute force in a reasonable
+ amount of time, because this operation is too computationally expensive (assumed but not proven to be NP-complete).
+-It also assumes that no two distinct individuals will generate the same key-pair randomly, hence, there exists a need for
++It also assumes that no two distinct individuals will generate the same key-pair randomly; hence, there exists a need for
+ suitable random number generators. This leads to defining {\tt hasPrivateKeyFor} as an inverse functional property,
+ in Definition D\ref{def:hasPrivateKeyFor}.
+ 
+@@ -230,14 +230,18 @@
+ 
+ Thanks to the dual-nature of the public and private key pair, two distinct actions are made possible:
+ 
++\begin{enumerate}
++\item
+ {\em Encryption} is the obfuscation of a plain text message into a scrambled
+ message using the public key of a public/private key-pair, so that only it may be decrypted using the
+ corresponding private key, ensuring that communications may not be decrypted
+ by any other recipient than the one intended.
+ 
++\item
+ {\em Signing} is the process of associating a digital signature with a message; this
+ signature is generated using a private key. The authenticity and integrity
+ of the message can then be verified using the corresponding public key.
++\end{enumerate}
+ 
+ A {\em public key certificate} is the signed combination of a public key and
+ some information related to this key. Such a certificate may be self-signed
+@@ -343,7 +347,7 @@
+ %---for example using other types of certificates (see~\ref{sec:openpgpcipher})
+ %or Kerberos~\cite{rfc2712}.
+ 
+-When establishing a TLS connection, as part of the TLS handshake, the client obtains an X509 certificate from the server.
++When establishing a TLS connection, as part of the TLS handshake, the client obtains an X.509 certificate from the server.
+ At this point, the client relies on its trust anchors to verify it. If this certificate is trusted and verified, the handshake proceeds. Once the handshake has completed, the communication (on top of TLS) can proceed in a secure manner;
+ the only other party capable of reading the communication must 
+ have the private key corresponding to this server certificate.
+@@ -352,7 +356,7 @@
+ is requested or required to present a certificate to the server enabling
+ the server to identify the client using exactly the same method as above.
+ 
+-The remainder of this section describes, from a semantic web/logical point of view, what happens in this handshake. This forms the basis for comparison of how FOAF+TLS differs from this, in Section~\ref{sec:authlogic}.
++The remainder of this section describes, from a Semantic Web/logical point of view, what happens in this handshake. This forms the basis for comparison of how FOAF+TLS differs from this, in Section~\ref{sec:authlogic}.
+ 
+ The following describes the reasoning of a server, {\tt S}, that must make an authorization decision regarding some resource, {\tt R}, requested by a client, {\tt \_:client}. Server {\tt S} has a set of trusted CAs. {\tt S} would state that {\tt issuer} was a trusted CA with:
+ 
+@@ -407,8 +411,18 @@
+ \begin{verbatim}
+   {  ?P hasPrivateKeyFor ?key .
+      ?doc signature [ signedWith ?key ]
+-  } => { ?P claims [ is log:semantics of ?doc ] } . 
++  } => { { ?doc log:semantics ?semantics } => { ?P claims ?semantics } } . 
+ \end{verbatim}
++% Made change here.  Previously read ``?P claims that there exists
++% some object that is the log:semantics of ?doc''.  I assume we meant
++% ``?P actually claims the log:semantics of ?doc'', not ``?P believes
++% there exists SOMETHING that is the log:semantics of ?doc'' (the
++% latter of which is given from the definition of log:semantics, and
++% hence meaningless to us).  This makes the following work properly,
++% rather than asserting (the arguably correct, but misguided) ``issuer
++% claims { [ is log:semantics of _:certDoc ] }.  This mostly keeps
++% syntax correct at a bare minimum (object of ``claims'' is a
++% formula.) -- Pipian
+ \end{customdef}
+ 
+ Then, from the signature verification P\ref{prop:sigverif}, the certificate contents P\ref{prop:certcontent} and the definition
+@@ -454,19 +468,21 @@
+ 
+ TLS as used above functions then by proving the authorship of the signature on the client certificate, and trusting that author.
+ 
+-At this point the server {\tt S} has a Distinguished Name (DN) as a handle on {\tt subject}. It can then find out if the DN is authorized access to the resource {\tt R}.  The problem with DNs is that, though they can be made to form a URI, the dereferencing mechanism for DNs is not global in the way {\tt http} URLs were designed to be. Therefore, if access to {\tt R} is granted in some rule based way, where more information about {\tt R} needs to be discovered for a decision to be made, then the DN cannot provide a global solution.  The same is true of the data in LDAP servers, these cannot have fields that point to any resource in any other ldap server; such linking is an essential piece required for building a global social network. As a result, a server that follows this procedure needs to have prior agreement with a limited number of servers for the client certificate to be of value. The next sections shows how FOAF+TLS solves this problem.
++At this point the server {\tt S} has a Distinguished Name (DN) as a handle on {\tt subject}. It can then find out if the DN is authorized access to the resource {\tt R}.  The problem with DNs is that, though they can be made to form a URI, the dereferencing mechanism for DNs is not global in the way {\tt http} URLs were designed to be. Therefore, if access to {\tt R} is granted in some rule based way, where more information about {\tt R} needs to be discovered for a decision to be made, then the DN cannot provide a global solution.  The same is true of the data in LDAP servers; these cannot have fields that point to any resource in any other LDAP server.
++
++Such linking is an essential piece required for building a global social network. As a result, a server that follows this procedure needs to have prior agreement with a limited number of servers for the client certificate to be of value. The next sections shows how FOAF+TLS solves this problem.
+ \section{The FOAF+TLS protocol}
+ \label{sec:foaftlsprotocol}
+ 
+ This section describes the FOAF+TLS protocol.  The FOAF+TLS protocol functions on
+-top of TLS, the only difference with PKI uses of TLS is in the way FOAF+TLS
++top of TLS; the only difference with PKI uses of TLS is in the way FOAF+TLS
+ verifies and trusts certificates.\footnote{Although the examples we use are based on the Web,
+ FOAF+TLS could in principle also be used for authentication to other 
+ TLS-enabled services, such as IMAPS.}
+ 
+ When protecting a service, it is important to differentiate authentication from authorization.
+ Authentication is the action of verifying the identity of the remote user.
+-Authorisation consists of allowing or denying access to or operations on a given
++Authorization consists of allowing or denying access to or operations on a given
+ resource, based on the identity obtained during authentication. For each resource then is associated a set of agents that can access it. This set can be specified in a number of ways: by simple enumeration of the members of the set using URIs, or by description --- those members satisfying certain properties. 
+ 
+ FOAF+TLS enables a server to authenticate a client given a simple URL. This URL can then be used directly for authorization, or to explore more information in the web of linked data, in order to decide if the referent of the URL satisfies the constraints required for accessing the resource.
+@@ -476,7 +492,7 @@
+ 
+ \begin{figure}[htbp]
+ \centering\includegraphics[width=\columnwidth]{figures/foaf_ssl_sequence}
+-\caption{The FOAF+TLS sequence diagram.} ¶we
++\caption{The FOAF+TLS sequence diagram.}
+ \label{fig:foafsslseqdiag}
+ \end{figure}
+ 
+@@ -486,7 +502,7 @@
+ \item A client fetches a public HTTP resource which points to a protected resource for example {\tt <https://juliet.net/location>}.
+ \item The client {\tt romeo:i} dereferences this URL.
+ \item During the TLS handshake (when the connection is initiated),
+-the server requests a client certificate. Because FOAF+TLS does not rely on CAs, it can ask for $any$ certificate\footnote{This is allowed by TLS 1.1 in RFC4346 section 7.4.4. It may also be possible to request certificates from well known Open CAs --- CA's who by publishing their private key would allow anyone to sign with them --- enabling FOAF+SSL servers to filter certs to those intended to be used this way. }. The client sends Romeo's certificate (which may be self-signed) containing its
++the server requests a client certificate. Because FOAF+TLS does not rely on CAs, it can ask for {\em any} certificate.\footnote{This is allowed by TLS 1.1 in RFC4346 section 7.4.4. It may also be possible to request certificates from well known Open CAs ---~CAs who, by publishing their private key, would allow anyone to sign with them~--- enabling FOAF+SSL servers to filter certs to those intended to be used this way.} The client sends Romeo's certificate (which may be self-signed) containing its
+ public key (see ``{\tt Subject Public Key Info}'' in Listing~\ref{listing:x509cert}) and
+ a {\em Subject Alternative Name} URI (see ``{\tt X509v3 extensions}'' in Listing~\ref{listing:x509cert}).
+ Because the TLS handshake has completed successfully, Juliet's server knows that Romeo's
+@@ -500,12 +516,13 @@
+ \item Once this fundamental authentication step is complete, Romeo's identity (as represented within the server) may also
+ be augmented with information regarding
+ its position in a graph of
+-relations (including frienship ones), in order to determine a degree of trust 
++relations (including friendship ones), in order to determine a degree of trust 
+ according to some criteria. Juliet's server can get this information 
+ by crawling the web starting from her FOAF file, or by other means.
+ \item Authentication has been done; authorization can now take place.                       
+ \end{enumerate}
+ 
++\pagebreak
+ \begin{lstlisting}[basicstyle=\rm\scriptsize\ttfamily,label={listing:x509cert},caption={Excerpt of a text representation of a FOAF+TLS certificate.}]
+      Subject Public Key Info:
+             Public Key Algorithm: rsaEncryption
+@@ -533,7 +550,7 @@
+ 
+ This section draws a parallel with Section~\ref{sec:tlsauth}, again, following the reasoning of the web server  {\tt S} in giving {\tt \_:client} access to some resource {\tt R}.
+ 
+-At the end of stage 3 in the FOAF+TLS sequence diagram, the server {\tt S}, has received the client certificate securely. Being self-signed (or signed by an unknown party), its semantics are somewhat different. Furthermore, what intersts S in this FOAF+TLS certificate are only the URI identifiers to refer to the subject, abandoning thus the limitations of DNs. In addition, since it is asserted by the client, {\tt S} knows that \footnote{The signer being the author, following all the reasoning from P\ref{prop:clientclaim}, P\ref{prop:sigverif}, D\ref{def:signedCertClaim} would just end up with this result.}:
++At the end of stage 3 in the FOAF+TLS sequence diagram, the server {\tt S}, has received the client certificate securely. Being self-signed (or signed by an unknown party), its semantics are somewhat different. Furthermore, what interests {\tt S} in this FOAF+TLS certificate are only the URI identifiers to refer to the subject, abandoning thus the limitations of DNs. In addition, since it is asserted by the client, {\tt S} knows that \footnote{The signer being the author, following all the reasoning from P\ref{prop:clientclaim}, P\ref{prop:sigverif}, D\ref{def:signedCertClaim} would just end up with this result.}:
+ 
+ \begin{customprop}{prop:foafCertClientClaim}
+ \begin{verbatim}
+@@ -544,7 +561,7 @@
+ \end{customprop}
+ 
+ 
+-{\tt S} may know nothing of {\tt romeo:i}. But it knows from the TLS session that:
++{\tt S} may know nothing of {\tt romeo:i}. However, it knows from the TLS session that:
+ 
+ \begin{customprop}{prop:foafPubKey}
+ \begin{verbatim}
+@@ -552,7 +569,7 @@
+ \end{verbatim}
+ \end{customprop}
+ 
+-Hence it can conclude from P\ref{prop:foafCertClientClaim}, P\ref{prop:foafPubKey}, and D\ref{def:hasPrivateKeyFor} that {\tt romeo:i} would have to agree with it that it is {\tt \_:client}. This should not be a surprise, as that is indeed what one assumes someone who sends such a certificat intends.
++Hence, it can conclude from P\ref{prop:foafCertClientClaim}, P\ref{prop:foafPubKey}, and D\ref{def:hasPrivateKeyFor} that {\tt romeo:i} would have to agree with it that it is {\tt \_:client}. This should not be a surprise, as that is indeed what one assumes someone who sends such a certificate intends.
+ 
+ \begin{customprop}{prop:client_IamClient}
+ \begin{verbatim}
+@@ -561,7 +578,7 @@
+ \end{verbatim}
+ \end{customprop}
+ 
+-So since {\tt \_:client} asserts he is  {\tt romeo:i}, he can find no harm in {\tt S} finding more information about him by looking at {\tt romeo:i}. {\tt S} can do that, as {\tt romeo:i} is a dereferenceable URI, whereas {\tt \_:client} and {\tt pubKey} are not.
++Thus, since {\tt \_:client} asserts it is  {\tt romeo:i}, it can find no harm in {\tt S} finding more information about itself by looking at {\tt romeo:i}. {\tt S} can do that, as {\tt romeo:i} is a dereferenceable URI, whereas {\tt \_:client} and {\tt pubKey} are not.
+ 
+ \begin{customprop}{prop:foafRomeoSt}
+ \begin{verbatim}
+@@ -570,7 +587,7 @@
+ \end{verbatim}
+ \end{customprop}
+ 
+-And so again by P\ref{prop:foafRomeoSt},  P\ref{prop:foafPubKey}, and D\ref{def:hasPrivateKeyFor}
++Again, by P\ref{prop:foafRomeoSt},  P\ref{prop:foafPubKey}, and D\ref{def:hasPrivateKeyFor}:
+ 
+ \begin{customprop}{prop:romeo_IamClient}
+ \begin{verbatim}
+@@ -579,11 +596,16 @@
+ \end{verbatim}
+ \end{customprop}
+ 
+-In other words both {\tt romeo:i} and {\tt \_:client} would agree given what {\tt S} knows, that they are the same. The advantage of of this reasoning via an indirection of what others would have to agree to given what S knows, is that it allows {\tt S} to assert the minimum it needs to, and so be minimally liable.
++In other words, both {\tt romeo:i} and {\tt \_:client} would agree, given what {\tt S} knows, 
++that {\tt S} can consider {\tt romeo:i owl:sameAs \_:client}.
++In particular {\tt romeo:i} cannot repudiate this assertion since {\tt romeo:i} 
++itself provided P\ref{prop:foafRomeoSt} authoritatively (when being dereferenced).
+ 
+-It follows then that if {\tt S} has to serve R to {\tt romeo:i} then {\tt romeo:i} cannot disagree if {\tt S} serves {\tt R} to {\tt \_:client} . And this is all that {\tt S} needs to know to accomplish its task.
++%In other words, both {\tt romeo:i} and {\tt \_:client} would agree, given what {\tt S} knows, that they are the same. The advantage of this reasoning via an indirection of what others would have to agree to given what S knows, is that it allows {\tt S} to assert the minimum it needs to, and so be minimally liable.
+ 
+-It is an interesting further question to find out if S also knows that {\tt romeo:i = \_:client}, but we have not at present had enough time to look into this. 
++%It follows then that if {\tt S} has to serve R to {\tt romeo:i} then {\tt romeo:i} cannot disagree if {\tt S} serves {\tt R} to {\tt \_:client}; this is all {\tt S} needs to know to accomplish its task.
++
++%It is an interesting further question to find out if S also knows that {\tt romeo:i = \_:client}, but we have not at present had enough time to look into this. 
+ \section{Related work}
+ \label{sec:other}
+ 
+@@ -597,9 +619,9 @@
+ FOAF+TLS makes only slight changes in the way X.509 certificates are used; it does not require changes in
+ the actual TLS stack. With the OpenPGP TLS extension, the problem of key distribution still remains, whereas FOAF offers more flexibility in that respect.
+ 
+-OpenID also share considerable similarities with FOAF+TLS, due in part to OpenID's reliance on URLs as
++OpenID also shares considerable similarities with FOAF+TLS, due in part to OpenID's reliance on URLs as
+ identifiers, just as FOAF+TLS relies on dereferenceable URIs bearing FOAF
+-data. However, OpenID requires a much higher number of connections to establish identity --- 9 or so as opposed to 2. It fails to make full use of the information it could get from the URI identifier, as a networked element.
++data. However, OpenID requires a much higher number of connections to establish identity --- 9 or so as opposed to 2. It furthermore fails to make full use of the information it could get from the URI identifier, as a networked element by not dereferencing the information identified by the URI.
+ 
+ \section{Conclusions}
+ 

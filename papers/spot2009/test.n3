@@ -1,0 +1,36 @@
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix cert: <http://www.w3.org/ns/auth/cert#>.
+@prefix rsa: <http://www.w3.org/ns/auth/rsa#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix romeo: <https://romeo.net/#>.
+@prefix jult: <https://juliet.net/#>.
+@prefix : <#> .
+
+
+#(D1) 
+:hasPrivateKeyFor a owl:InverseFunctionalProperty; 
+    rdfs:domain foaf:Agent; 
+    rdfs:range cert:PublicKey .
+
+#(P9)
+:client :claims { <> dc:created romeo:i; 
+                     foaf:primaryTopic romeo:i. 
+                  romeo:i :hasPrivateKeyFor :pubKey . } .
+
+#(P10)
+:client :hasPrivateKeyFor :pubKey .
+
+#(P11)
+# note: cannot use named graphs due to bug
+# http://lists.w3.org/Archives/Public/public-cwm-talk/2009AprJun/0000.html
+{ ( [ is :claims of :client ]
+    [ is log:semantics of <http://www.w3.org/2000/10/swap/test/owl/new_owl_rules.n3> ]
+    {:client :hasPrivateKeyFor :pubKey.
+     :hasPrivateKeyFor a owl:InverseFunctionalProperty.  }
+  ) log:conjunction 
+               [ log:conclusion ?F ] . }  
+  => { :client :mustAgree ?F } .
+

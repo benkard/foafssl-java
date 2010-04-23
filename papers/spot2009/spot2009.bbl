@@ -1,0 +1,45 @@
+\begin{thebibliography}{1}
+
+\bibitem{fielding2000phd}
+Fielding, R.T.:
+\newblock Architectural Styles and the Design of Network-based Software
+  Architectures.
+\newblock PhD thesis, University of California, Irvine (2000)
+  \url{http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm}.
+
+\bibitem{WebArchVol1}
+Jacobs, I., Walsh, N., eds.:
+\newblock Architecture of the {World Wide Web}, Volume One.
+\newblock (December 2004)
+  \url{http://www.w3.org/TR/2004/REC-webarch-20041215/}.
+
+\bibitem{SemWebMetcalf}
+Hendler, J., Golbeck, J.:
+\newblock Metcalfe's law, {Web 2.0}, and the {Semantic Web}.
+\newblock Web Semant. \textbf{6}(1) (2008)  14--20
+  \url{http://www.cs.umd.edu/~golbeck/downloads/Web20-SW-JWS-webVersion.pdf}.
+
+\bibitem{DBLP:conf/www/GolbeckPH03}
+Golbeck, J., Parsia, B., Hendler, J.A.:
+\newblock Trust networks on the semantic web.
+\newblock In: WWW (Posters). (2003) \url{http://mindswap.org/papers/Trust.pdf}.
+
+\bibitem{rfc5280}
+Cooper, D., Santesson, S., Farrell, S., Boeyen, S., Housley, R., Polk, W.:
+\newblock {Internet X.509 Public Key Infrastructure Certificate and Certificate
+  Revocation List (CRL) Profile}.
+\newblock RFC 5280 (Proposed Standard) (May 2008)
+
+\bibitem{rfc2246}
+Dierks, T., Allen, C.:
+\newblock {The TLS Protocol Version 1.0}.
+\newblock RFC 2246 (Proposed Standard) (January 1999) Obsoleted by RFC 4346,
+  updated by RFC 3546.
+
+\bibitem{rfc5081}
+Mavrogiannopoulos, N.:
+\newblock {Using OpenPGP Keys for Transport Layer Security (TLS)
+  Authentication}.
+\newblock RFC 5081 (Experimental) (November 2007)
+
+\end{thebibliography}

@@ -1,0 +1,10 @@
+@prefix : <#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ont: <ont#> .
+@prefix jult: <https://juliet.example/#> .
+
+# a public key is a literal, so for this example we just put 42
+:i a foaf:Person;
+   ont:hasPrivateKeyFor 42;
+   foaf:name "Romeo";
+   foaf:knows jult:me .

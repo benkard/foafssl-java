@@ -1,0 +1,15 @@
+\BOOKMARK [1][-]{section.1.1}{Introduction}{}
+\BOOKMARK [1][-]{section.1.2}{Background}{}
+\BOOKMARK [2][-]{subsection.1.2.1}{The RESTful Web Architecture}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.2}{The Semantic Web}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.3}{FOAF, reputation networks and the Web of Trust}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.4}{Public key cryptography}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.5}{PKI and hierarchical model of trust}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.6}{Web of Trust}{section.1.2}
+\BOOKMARK [2][-]{subsection.1.2.7}{SSL authentication}{section.1.2}
+\BOOKMARK [1][-]{section.1.3}{The FOAF+SSL protocol}{}
+\BOOKMARK [2][-]{subsection.1.3.1}{Protocol sequence}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.2}{Authentication Logic}{section.1.3}
+\BOOKMARK [2][-]{subsection.1.3.3}{Following links}{section.1.3}
+\BOOKMARK [1][-]{section.1.4}{Related work}{}
+\BOOKMARK [1][-]{section.1.5}{Conclusions}{}
