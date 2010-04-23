@@ -2,9 +2,11 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix log: <http://www.w3.org/2000/10/swap/log#> .
-
-
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix : <#> .
+
+:TrustedCA a owl:Class .
 
 :hasPrivateKeyFor a owl:InverseFunctionalProperty;
     rdfs:comment """
@@ -16,8 +18,20 @@
     rdfs:domain foaf:Agent;
     rdfs:range cert:PublicKey .
 
+:signedWith a rdf:Property;
+   rdfs:domain :Graph;
+   rdfs:range cert:PubKey .
+
+:sigString a rdf:Property;
+   rdfs:domain :Graph;
+   rdfs:range cert:PubKey .
+
+:signature a rdf:Property .
+
+:claims a rdf:Property .
+
 # a definition of :semantics (which one could also perhaps better 
-# name :sense relating # any term, not just a document, to its sense
+# name :sense relating any term, not just a document, to its sense
 # D1
 { ?resource :representation ?doc .
   ?doc log:semantics ?graph . } => { ?resource :semantics ?graph . } .
@@ -27,4 +41,18 @@
 { ?P :hasPrivateKeyFor ?key .
   ?doc :signature [ :signedWith ?key ]
 } => { ?P :claims [ is :semantics of ?doc] }.
+
+#D3
+#Proving that a document is signed by P, is to assert P claims its contents:
+{ ?P :hasPrivateKeyFor ?key .
+  ?doc :signature [ :signedWith ?key ]
+} => { ?P :claims [ is :semantics of ?doc] }.
+
+#D4
+#To trust someone is to trust what they claim. 
+#For someone to be a TrustedCA is to trust what they say.
+# This is overly general. We should limit it to things said in Certs - but it will function for now
+{ ?ca :claims ?s . ?ca a :TrustedCA } => { ?s a log:Truth } .
+
+
 

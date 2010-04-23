@@ -1,5 +1,5 @@
 #see RFC2606 on .example domains 
-@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix cert: <http://www.w3.org/ns/auth/cert#> .
 @prefix rsa: <http://www.w3.org/ns/auth/rsa#> .
@@ -10,36 +10,11 @@
 @prefix jult: <https://juliet.example/#> .
 @prefix : <ont.n3#> .
 
-romeo:i :semantics { 
-    romeo:i a foaf:Person; 
-            :hasPrivateKeyFor :pubKey;
-            foaf:name "Romeo"; 
-            foaf:knows jult:me . 
-    } .
-
-
-# a definition of :semantics (which one could also perhaps better name :sense relating
-# any term, not just a document, to its sense
-# D1
-{ ?resource :representation ?doc . 
-  ?doc log:semantics ?graph . } => { ?resource :semantics ?graph . } .
-
-#D2
-:hasPrivateKeyFor a owl:InverseFunctionalProperty; 
-    rdfs:comment """
-     D2
-     This is just the cert:identity relation with a name that makes it
-     easier to understand the relation between the public key and the 
-     private key.
-    """;
-    owl:sameAs cert:identity;
-    rdfs:domain foaf:Agent;
-    rdfs:range cert:PublicKey .
 
 #P2
-:issuerDN a :TrustedCA; 
+<ldap:issuerDN> a :TrustedCA; 
     rdfs:comment "P2: The reasoner knows this CA";
-    :hasPrivateKeyFor :CAKey .
+    :hasPrivateKeyFor 84 .
 
 #P3
 # On receiving the certificate _:certDoc, the reasoner S knows that
@@ -48,33 +23,25 @@ romeo:i :semantics {
 # be = to the handle the reasoner has on it. <> won't work.
 # also made it a full URL to make it easier to test, namely :certDoc
 # perhaps better would be to put it in its own file
-:certDoc :semantics _:certSemantics .
-_:certSemantics = { :certDoc dc:created :issuerDN; 
-                       foaf:primaryTopic :subjectDN .
-                    :subjectDN :hasPrivateKeyFor :pubKey . 
-                    :issuerDN :hasPrivateKeyFor :CAKey . } .
+#:certDoc :semantics _:certSemantics .
+#_:certSemantics = { :certDoc dc:created :issuerDN; 
+#                       foaf:primaryTopic :subjectDN .
+#                    :subjectDN :hasPrivateKeyFor :pubKey . 
+#                    :issuerDN :hasPrivateKeyFor :CAKey . } .
+#
 
 #P4
 #The SSL handshake means S knows
-:client :hasPrivateKeyFor :pubKey .
+#of course this will be calculated during the handshake
+:client :hasPrivateKeyFor 42 .
 
 #P5
-# the client claims the contents of the certificate and that it is signed by the CA
-# is it really required that the client claim the content?
-:client :claims { _:certSemantics a log:Truth .
-                  :certDoc :signature _:certSig .
-                  _:certSig :signedWith :CAKey;
-                            :sigString "XYZ SIG" . } .
+# the client claims the contents of the certificate (which is signed) 
+:client :claims [ is log:semantics of <romeoCACert.n3> ] .
 
 #P6
 #after verifying the signature the reasoner S knows that the doc has been signed correctly
-:certDoc :signature [ :signedWith :CAKey ] .
-
-#D3
-#Proving that a document is signed by P, is to assert P claims its contents:
-{ ?P :hasPrivateKeyFor ?key . 
-  ?doc :signature [ :signedWith ?key ]
-} => { ?P :claims [ is :semantics of ?doc] }.
+:certDoc :signature [ :signedWith 84 ] .
 
 ### we can deduce that
 ### TOTEST
@@ -83,7 +50,8 @@ _:certSemantics = { :certDoc dc:created :issuerDN;
 #D4
 #To trust someone is to trust what they claim. S trusts TrustedCAs, thus:
 # This is overly general. We should limit it to things said in Certs - but it will function for now
-{ ?ca :claims ?s . ?ca a :TrustedCA } => { ?s a log:Truth } .
+#{ ?ca :claims ?s . ?ca a :TrustedCA } => { ?s a log:Truth } .
+
 
 ### we can deduce that
 ### TOTEST
