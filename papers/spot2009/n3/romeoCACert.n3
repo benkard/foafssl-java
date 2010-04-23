@@ -1,0 +1,15 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix ont: <ont.n3#> .
+
+#This is a normal CA cert
+
+{
+<> dc:created <ldap:issuerDN>; 
+   foaf:primaryTopic <ldap:subjectDN> .
+
+<ldap:subjectDN> ont:hasPrivateKeyFor 42 . 
+<ldap:issuerDN> ont:hasPrivateKeyFor 84 .
+
+} ont:signedWith 84;
+  ont:sigString "XYZ SIG" .
