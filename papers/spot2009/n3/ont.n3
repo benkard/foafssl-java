@@ -19,16 +19,31 @@
     rdfs:range cert:PublicKey .
 
 :signedWith a rdf:Property;
-   rdfs:domain :Graph;
+   rdfs:domain :Signature;
    rdfs:range cert:PubKey .
 
 :sigString a rdf:Property;
-   rdfs:domain :Graph;
+   rdfs:domain :Signature;
    rdfs:range cert:PubKey .
 
-:signature a rdf:Property .
+:signature a rdf:Property;
+   rdfs:domain foaf:Document;
+   rdfs:range :Signature .
 
-:claims a rdf:Property .
+:Signature a rdf:Class;
+   rdfs:comment "should be part of the cert ontology perhaps" . 
+
+# we distinguish a statement and a claim, by what they are related to 
+:states a rdf:Property ;
+    rdfs:domain foaf:Person;
+    rdfs:range foaf:Document;
+    rdfs:comment "relates a person to a statement that they affirm".
+
+:claims a rdf:Property;
+    rdfs:domain foaf:Person;
+    rdfs:comment "relates a person to a graph of things they claim".
+
+#belief would then be a relation to a graph and its implications
 
 # a definition of :semantics (which one could also perhaps better 
 # name :sense relating any term, not just a document, to its sense
@@ -38,21 +53,26 @@
 
 #D3
 #Proving that a document is signed by P, is to assert P claims its contents:
+#TODO: This should be at any level of nesting. Ie, it does not matter if
+#gorge says that jack said the CA said that P. If P is signed by CA, then 
+#this rule applies. Not sure how to write this out, though
 { ?P :hasPrivateKeyFor ?key .
   ?doc :signature [ :signedWith ?key ]
-} => { ?P :claims [ is :semantics of ?doc] }.
+} => { ?P :states ?doc .}.
 
-#D3
-#Proving that a document is signed by P, is to assert P claims its contents:
-{ ?P :hasPrivateKeyFor ?key .
-  ?doc :signature [ :signedWith ?key ]
-} => { ?P :claims [ is :semantics of ?doc] }.
+# the relation between stating soemthing and a claim
+{ ?s :states ?doc . ?doc log:semantics ?g . } =>
+{ ?s :claims ?g } .
 
 #D4
-#To trust someone is to trust what they claim. 
+#To trust someone is to trust what they claim. (here we put
+#it in terms of belief
 #For someone to be a TrustedCA is to trust what they say.
 # This is overly general. We should limit it to things said in Certs - but it will function for now
 { ?ca :claims ?s . ?ca a :TrustedCA } => { ?s a log:Truth } .
 
-
+#definition of log:Truth
+@forAll :Grph, :subj, :rel, :obj .
+{  :Grph a log:Truth;
+      log:includes {:subj :rel :obj. } } => { :subj :rel :obj. } .
 

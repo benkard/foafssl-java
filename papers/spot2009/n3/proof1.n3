@@ -8,13 +8,14 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix romeo: <https://romeo.example/#> .
 @prefix jult: <https://juliet.example/#> .
-@prefix : <ont.n3#> .
+@prefix ont: <ont.n3#> .
+@prefix : <#> .
 
 
 #P2
-<ldap:issuerDN> a :TrustedCA; 
-    rdfs:comment "P2: The reasoner knows this CA";
-    :hasPrivateKeyFor 84 .
+<ldap:issuerDN> a ont:TrustedCA; 
+    rdfs:comment "P2: The reasoner knows and trusts this CA";
+    ont:hasPrivateKeyFor 84 .
 
 #P3
 # On receiving the certificate _:certDoc, the reasoner S knows that
@@ -33,19 +34,19 @@
 #P4
 #The SSL handshake means S knows
 #of course this will be calculated during the handshake
-:client :hasPrivateKeyFor 42 .
+:client ont:hasPrivateKeyFor 42 .
 
 #P5
-# the client claims the contents of the certificate (which is signed) 
-:client :claims [ is log:semantics of <romeoCACert.n3> ] .
+# the client sends its certificate as a statement (which is signed) 
+:client ont:states <romeoCACert.n3> .
 
 #P6
 #after verifying the signature the reasoner S knows that the doc has been signed correctly
-:certDoc :signature [ :signedWith 84 ] .
+<romeoCACert.n3> ont:signature [ ont:signedWith 84 ] .
 
 ### we can deduce that
 ### TOTEST
-#:issuerDN :claims _:certSemantics .
+#:issuerDN :believes _:certSemantics . #ok!
 
 #D4
 #To trust someone is to trust what they claim. S trusts TrustedCAs, thus:
@@ -55,7 +56,7 @@
 
 ### we can deduce that
 ### TOTEST
-#:subjectDN :hasPrivateKeyFor :pubKey .
+#<ldap:subjectDN> ont:hasPrivateKeyFor 42 .
 
 ### we can deduce that
 ### TOTEST

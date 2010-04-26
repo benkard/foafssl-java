@@ -1,15 +1,29 @@
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/elements/1.1/>.
 @prefix ont: <ont.n3#> .
+@prefix : <#> .
+#This is a normal CA certificate for Romeo
 
-#This is a normal CA cert
+:lit log:semantics {
+    <> dc:created <ldap:issuerDN>; 
+       foaf:primaryTopic <ldap:subjectDN> .
 
-{
-<> dc:created <ldap:issuerDN>; 
-   foaf:primaryTopic <ldap:subjectDN> .
+    <ldap:subjectDN> ont:hasPrivateKeyFor 42 ;
+            foaf:name "Romeo".
+    <ldap:issuerDN> ont:hasPrivateKeyFor 84 .
+} .
 
-<ldap:subjectDN> ont:hasPrivateKeyFor 42 . 
-<ldap:issuerDN> ont:hasPrivateKeyFor 84 .
+:lit rdfs:comment """
+   We are not putting the literal here because it would require
+   writing a parser for it. What interests us is that it has a signature
+   and that we know the semantics for it. and that we have its signature.
+  ( of course without that literal it is impossible to verify the signature
+    so we will be asserting it as a fact )
+""";
+   ont:signature [
+      ont:signedWith 84;
+      ont:sigString "XYZ SIG" ] .
 
-} ont:signedWith 84;
-  ont:sigString "XYZ SIG" .
+

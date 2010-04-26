@@ -1,5 +1,4 @@
-PREFIX : <.> 
-CONSTRUCT { ?s :hasPrivateKeyFor ?pk . }
+SELECT ?r
 WHERE {
-   ?s :hasPrivateKeyFor ?pk .
+   ?s ?r ?pk .
 }
