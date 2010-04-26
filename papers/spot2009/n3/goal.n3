@@ -1,0 +1,9 @@
+@prefix ont: <ont.n3#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
+@prefix r: <proof1.n3#> .
+@prefix : <#> .
+
+# we want to know what the reasoner discovers about it's handle on the
+# client ( r:client )
+{ r:client ?r ?o } => { r:client ?r ?o . } .
+
