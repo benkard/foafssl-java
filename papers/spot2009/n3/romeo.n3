@@ -8,3 +8,4 @@
    ont:hasPrivateKeyFor 42;
    foaf:name "Romeo";
    foaf:knows jult:me .
+
