@@ -32,6 +32,8 @@ POSSIBILITY OF SUCH DAMAGE.
  */
 package net.java.dev.sommer.foafssl.verifier;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
 import net.java.dev.sommer.foafssl.claims.WebIdClaim;
 
 /**
@@ -41,7 +43,7 @@ import net.java.dev.sommer.foafssl.claims.WebIdClaim;
  */
 public abstract class FoafSslVerifier {
     // of course this should be created by lookup not here in the code
-    private final static SesameFoafSslVerifier verifier = new SesameFoafSslVerifier();
+    private static FoafSslVerifier verifier = null;
 
     /**
      * Verifies a WebId using FOAF+SSL
@@ -52,13 +54,29 @@ public abstract class FoafSslVerifier {
      */
     public abstract boolean verify(WebIdClaim webid);
 
-    /**
-     * Factory method for constructing a verifier. Can construct a number of
-     * implementations
-     * 
-     * @return
-     */
-    static public FoafSslVerifier getVerifier() {
-        return verifier;
-    }
+    
+	/**
+	 * This returns the singleton instance. If an instance has been previously
+	 * bound (e.g. by OSGi declarative services) this instance is returned,
+	 * otherwise a new instance is created and providers are injected using the
+	 * service provider interface (META-INF/services/)
+	 *
+	 * @return the singleton instance
+	 */
+	static public FoafSslVerifier getVerifier() {
+		if (verifier == null) {
+			synchronized (FoafSslVerifier.class) {
+				if (verifier == null) {
+					Iterator<FoafSslVerifier> weightedProviders = ServiceLoader
+							.load(FoafSslVerifier.class).iterator();
+					if (weightedProviders.hasNext()) {
+						verifier= weightedProviders.next();
+					} else {
+						throw new RuntimeException("no FoafSslVerifier could be located");
+					}
+				}
+			}
+		}
+		return verifier;
+	}
 }
