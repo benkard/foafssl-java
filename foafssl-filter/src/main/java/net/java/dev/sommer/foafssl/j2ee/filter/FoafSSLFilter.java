@@ -36,7 +36,7 @@ public class FoafSSLFilter implements Filter {
             X509Claim x509Claim = new X509Claim(certs[0]);
             if (x509Claim.verify()) {
                 pls = x509Claim.getVerified();
-                if (pls == null || pls.size() == 0) {
+                if (pls == null || pls.isEmpty()) {
                     resp.getOutputStream().write("No foaf+ssl certificates".getBytes());
                     return;
                 }

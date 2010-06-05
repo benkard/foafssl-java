@@ -1,0 +1,5 @@
+@prefix ont: <ont.n3#> .
+
+  # _:x ont:hasPrivateKeyFor _:y .
+   <ldap:subjectDN> ont:hasPrivateKeyFor 42 .
+

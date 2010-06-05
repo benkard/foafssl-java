@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 
 import net.java.dev.sommer.foafssl.cache.GraphCache;
 import net.java.dev.sommer.foafssl.cache.GraphCacheLookup;
+import net.java.dev.sommer.foafssl.cache.MemoryGraphCache;
 import net.java.dev.sommer.foafssl.claims.WebIdClaim;
 
 import org.openrdf.model.Literal;
@@ -69,8 +70,19 @@ public class SesameFoafSslVerifier extends FoafSslVerifier {
     final static String cert = "http://www.w3.org/ns/auth/cert#";
     final static String xsd = "http://www.w3.org/2001/XMLSchema#";
 
-    static transient Logger log = Logger.getLogger(SesameFoafSslVerifier.class.getName());
+       //WRONG! this should not be done here, but in a startup file
+   static {
+      try {
+         GraphCacheLookup.setCache(new MemoryGraphCache());
+      } catch (Exception ex) {
+         Logger.getLogger(GraphCache.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
 
+
+    static final transient Logger log = Logger.getLogger(SesameFoafSslVerifier.class.getName());
+
+   @Override
     public boolean verify(WebIdClaim webid) {
 
         GraphCache cache = GraphCacheLookup.getCache();
@@ -90,12 +102,14 @@ public class SesameFoafSslVerifier extends FoafSslVerifier {
                         "PREFIX cert: <http://www.w3.org/ns/auth/cert#>"
                                 + "PREFIX rsa: <http://www.w3.org/ns/auth/rsa#>"
                                 + "SELECT ?m ?e ?mod ?exp "
+                                + "FROM <"+webid.getGraphName().toString()+">"
                                 + "WHERE { "
                                 + "   [] cert:identity ?agent ;"
                                 + "        rsa:modulus ?m ;"
                                 + "        rsa:public_exponent ?e ."
                                 + "   OPTIONAL { ?m cert:hex ?mod . }"
-                                + "   OPTIONAL { ?e cert:decimal ?exp . }" + "}");
+                                + "   OPTIONAL { ?e cert:decimal ?exp . }"
+                                + "}");
             } catch (MalformedQueryException e) {
                 log.log(Level.SEVERE, "Error in Query String!", e);
                 webid.fail("SERVER ERROR - Please warn administrator");

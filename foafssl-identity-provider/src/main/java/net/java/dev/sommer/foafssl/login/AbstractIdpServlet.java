@@ -55,8 +55,6 @@ import javax.servlet.http.HttpServlet;
 
 import net.java.dev.sommer.foafssl.cache.GraphCacheLookup;
 import net.java.dev.sommer.foafssl.cache.MemoryGraphCache;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.sail.SailException;
 
 
 /**
@@ -126,7 +124,7 @@ public abstract class AbstractIdpServlet extends HttpServlet {
             }
         }
         String alias = getInitParameter(ALIAS_INITPARAM);
-        Certificate certificate = null;
+        Certificate cert = null;
         PrivateKey privateKey = null;
 
         try {
@@ -144,7 +142,7 @@ public abstract class AbstractIdpServlet extends HttpServlet {
             Context ctx = (Context) initCtx.lookup("java:comp/env");
             try {
                 try {
-                    certificate = (Certificate) ctx.lookup(CERTIFICATE_JNDI_NAME);
+                    cert = (Certificate) ctx.lookup(CERTIFICATE_JNDI_NAME);
                 } catch (NameNotFoundException e) {
                     LOG.log(Level.FINE, "JNDI name not found", e);
                 }
@@ -238,7 +236,7 @@ public abstract class AbstractIdpServlet extends HttpServlet {
             keyPasswordArray = keystorePasswordArray;
         }
 
-        if ((certificate == null) || (privateKey == null)) {
+        if ((cert == null) || (privateKey == null)) {
             if (keyStore == null) {
                 try {
                     InputStream ksInputStream = null;
@@ -256,28 +254,23 @@ public abstract class AbstractIdpServlet extends HttpServlet {
                         }
                     }
                 } catch (FileNotFoundException e) {
-                    LOG
-                            .log(Level.SEVERE,
+                    LOG.log(Level.SEVERE,
                                     "Error configuring servlet (could not load keystore).", e);
                     throw new ServletException("Could not load keystore.");
                 } catch (KeyStoreException e) {
-                    LOG
-                            .log(Level.SEVERE,
+                    LOG.log(Level.SEVERE,
                                     "Error configuring servlet (could not load keystore).", e);
                     throw new ServletException("Could not load keystore.");
                 } catch (NoSuchAlgorithmException e) {
-                    LOG
-                            .log(Level.SEVERE,
+                    LOG.log(Level.SEVERE,
                                     "Error configuring servlet (could not load keystore).", e);
                     throw new ServletException("Could not load keystore.");
                 } catch (CertificateException e) {
-                    LOG
-                            .log(Level.SEVERE,
+                    LOG.log(Level.SEVERE,
                                     "Error configuring servlet (could not load keystore).", e);
                     throw new ServletException("Could not load keystore.");
                 } catch (IOException e) {
-                    LOG
-                            .log(Level.SEVERE,
+                    LOG.log(Level.SEVERE,
                                     "Error configuring servlet (could not load keystore).", e);
                     throw new ServletException("Could not load keystore.");
                 }
@@ -295,11 +288,8 @@ public abstract class AbstractIdpServlet extends HttpServlet {
                     }
                 }
                 if (alias == null) {
-                    LOG
-                            .log(
-                                    Level.SEVERE,
-                                    "Error configuring servlet, invalid keystore configuration: alias unspecified or couldn't find key at alias: "
-                                            + alias);
+                    LOG.log( Level.SEVERE, "Error configuring servlet, invalid keystore configuration: "
+                            + "alias unspecified or couldn''t find key at alias: {0}", alias);
                     throw new ServletException(
                             "Invalid keystore configuration: alias unspecified or couldn't find key at alias: "
                                     + alias);
@@ -307,8 +297,8 @@ public abstract class AbstractIdpServlet extends HttpServlet {
                 if (privateKey == null) {
                     privateKey = (PrivateKey) keyStore.getKey(alias, keyPasswordArray);
                 }
-                if (certificate == null) {
-                    certificate = keyStore.getCertificate(alias);
+                if (cert == null) {
+                    cert = keyStore.getCertificate(alias);
                 }
             } catch (UnrecoverableKeyException e) {
                 LOG.log(Level.SEVERE, "Error configuring servlet (could not load keystore).", e);
@@ -322,8 +312,8 @@ public abstract class AbstractIdpServlet extends HttpServlet {
             }
         }
 
-        this.certificate = certificate;
-        this.publicKey = certificate.getPublicKey();
+        this.certificate = cert;
+        this.publicKey = cert.getPublicKey();
         this.privateKey = privateKey;
     }
 }

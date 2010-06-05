@@ -7,7 +7,8 @@
 <%@page import="org.bouncycastle.openssl.PEMWriter"%>
 <%@page import="java.security.cert.Certificate"%>
 <%@page import="net.java.dev.sommer.foafssl.claims.X509Claim"%>
-<%@page import="net.java.dev.sommer.foafssl.claims.WebIdClaim"%><html>
+<%@page import="net.java.dev.sommer.foafssl.claims.WebIdClaim"%>
+<html>
 <head>
 <title>WebId Login Service</title>
 </head>
