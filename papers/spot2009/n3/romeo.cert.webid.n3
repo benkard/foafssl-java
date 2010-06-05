@@ -1,0 +1,32 @@
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/>.
+@prefix ont: <ont.n3#> .
+@prefix romeo: <romeo.n3#> .
+@prefix : <#> .
+#This is a normal CA certificate for Romeo
+
+:lit log:semantics {
+    <> dc:created <ldap:someDN>; 
+       foaf:primaryTopic romeo:i .
+
+    romeo:i ont:hasPrivateKeyFor 42 ;
+            foaf:name "Romeo" .
+    <ldap:someDN> ont:hasPrivateKeyFor 126 .
+} .
+
+:lit rdfs:comment """
+   We are not putting the literal here because it would require
+   writing a parser for it. What interests us is that it has a signature
+   and that we know the semantics for it. and that we have its signature.
+  ( of course without that literal it is impossible to verify the signature
+    so we will be asserting it as a fact )
+
+   Note the DN certifiying the certificate can be anyone. It also can
+   have a WebID of course.
+""";
+     ont:signature [
+           ont:signedWith 126;
+           ont:sigString "XYZ SIG" ] .
+

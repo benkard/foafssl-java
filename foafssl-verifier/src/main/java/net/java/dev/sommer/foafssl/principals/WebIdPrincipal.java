@@ -41,36 +41,43 @@ import java.security.Principal;
  * @author Bruno Harbulot
  */
 public abstract class WebIdPrincipal implements Principal {
-    /**
-     * FOAF+SSL URI, a.k.a Web ID.
-     */
-    protected final URI uri;
 
-    /**
-     * Creates a FOAF+SSL Principal.
-     * 
-     * @param uri
-     *            Web ID.
-     */
-    public WebIdPrincipal(URI uri) {
-        this.uri = uri;
-    }
+   /**
+    * FOAF+SSL URI, a.k.a Web ID.
+    */
+   protected final URI uri;
 
-    /**
-     * Returns the Web ID as a URI.
-     * 
-     * @return the Web ID.
-     */
-    public URI getUri() {
-        return this.uri;
-    }
+   /**
+    * Creates a FOAF+SSL Principal.
+    *
+    * @param uri
+    *            Web ID.
+    */
+   public WebIdPrincipal(URI uri) {
+      this.uri = uri;
+   }
 
-    /**
-     * Returns the Web ID as a ASCII String.
-     * 
-     * @return the Web ID.
-     */
-    public String getName() {
-        return getUri().toASCIIString();
-    }
+   /**
+    * Returns the Web ID as a URI.
+    *
+    * @return the Web ID.
+    */
+   public URI getUri() {
+      return this.uri;
+   }
+
+   /**
+    * Returns the Web ID as a ASCII String.
+    *
+    * @return the Web ID.
+    */
+   @Override
+   public String getName() {
+      return getUri().toASCIIString();
+   }
+
+   @Override
+   public String toString() {
+      return getUri().toASCIIString();
+   }
 }

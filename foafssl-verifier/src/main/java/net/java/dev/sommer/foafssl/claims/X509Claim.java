@@ -72,7 +72,7 @@ public class X509Claim {
     private final LinkedList<Throwable> problemDescription = new LinkedList<Throwable>();
     private final List<WebIdClaim> verified = new LinkedList<WebIdClaim>();
     private final List<WebIdClaim> problematic = new LinkedList<WebIdClaim>();
-    static transient Logger LOG = Logger.getLogger(X509Claim.class.getName());
+    static final transient Logger LOG = Logger.getLogger(X509Claim.class.getName());
 
     public X509Claim(X509Certificate cert) {
         certClaim = cert;
@@ -84,7 +84,7 @@ public class X509Claim {
 
     public boolean verify(Date validityDate) throws CertificateParsingException {
         if (!isCurrent(validityDate)) {
-            getProblemDescription().add(new Severe("Certificate is not currently valid."));
+            getProblemDescription().add(new Severe("Certificate is not currently valid. Dates don't match."));
             return false;
         }
         List<URI> candidateUris = getAlternativeURIName(certClaim);

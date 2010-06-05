@@ -33,6 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 package net.java.dev.sommer.foafssl.claims;
 
 import java.net.URI;
+import java.net.URL;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
@@ -64,6 +65,8 @@ public class WebIdClaim {
 
     private boolean verified = false;
     private LinkedList<Throwable> problemDescription = new LinkedList<Throwable>();
+
+    URL graphName; // the URL at which the remote document is located, and the index in the DB where one can find it.
 
     /**
      * Creates a Web ID claim.
@@ -108,7 +111,8 @@ public class WebIdClaim {
      * available by dereferencing this Web ID.
      */
     public boolean verify(FoafSslVerifier verifier) {
-        return verifier.verify(this);
+        verified = verifier.verify(this);
+        return verified;
     }
 
     /**
@@ -195,5 +199,28 @@ public class WebIdClaim {
         } else {
             return null;
         }
+    }
+
+    /**
+     * The URL of the foaf:Document where the info was fetched from.
+     * It may be useful to name the graph directly, and not the distant resources, so that we
+     * can very clearly get back to the exact same info. On the other hand, that means that with
+     * multiple databases keeping them in synx would be more problematic, easier to refer to the
+     * external entity. One could argue that it is just a question of calculating the URL from the
+     * WebID, but that is not to count upon the possibility that there may be legitimate redirects.
+     * Whether indeed the graph name should be the final such redirect is yet another open issue
+     * at present. 
+     * 
+     * So to simplify, we pass on the name of the graph at which the information was found for this
+     * WebId.
+     * 
+     * @param base The URL for the graph
+     */
+    public void setGraphName(URL base) {
+      graphName = base;
+    }
+
+    public URL getGraphName() {
+       return graphName;
     }
 }

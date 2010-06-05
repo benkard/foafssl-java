@@ -1,0 +1,51 @@
+#see RFC2606 on .example domains 
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix cert: <http://www.w3.org/ns/auth/cert#> .
+@prefix rsa: <http://www.w3.org/ns/auth/rsa#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix romeo: <https://romeo.example/#> .
+@prefix jult: <https://juliet.example/#> .
+@prefix ont: <ont.n3#> .
+@prefix : <#> .
+
+# the reasoner does not really need to to know of any CA's. 
+# It can of course, but we don't need it in this case
+
+
+#P4
+#The SSL handshake allows the reasoner to assert
+#of course this will be calculated during the handshake
+:client ont:hasPrivateKeyFor 126;
+     a foaf:Agent;
+     rdfs:comment """
+        this is the handle the server has on the client that made the
+        connection. It could/should be a blank node, but it is easier for 
+        testing purposes to make it a local URL. 
+        
+        The SSL handshake means that the server knows the public key of the
+        end user. Here we made the public key a literal 42, just because that
+        simplifies things. Of course it is a public key described using the
+        cert ontology.
+     """.
+
+#P10
+# the client sends its certificate as a statement (which is signed) 
+# we can think of this statement as named document - named locally here
+:client ont:states <romeo.cert.webid.n3> .
+
+#P6
+#after verifying the signature the reasoner S knows that the doc has been signed correctly
+<romeo.cert.webid.n3> ont:signature [ ont:signedWith 84 ] .
+
+### we can deduce that
+#:issuerDN :believes _:certSemantics . #ok!
+
+### we can deduce that
+#<ldap:subjectDN> ont:hasPrivateKeyFor 42 .
+
+### we can deduce that
+#:client owl:sameAs <ldap:subjectDN> .
+

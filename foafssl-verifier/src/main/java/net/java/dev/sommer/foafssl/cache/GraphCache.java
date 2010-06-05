@@ -32,6 +32,9 @@
 
 package net.java.dev.sommer.foafssl.cache;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.logging.Level;
 import net.java.dev.sommer.foafssl.claims.WebIdClaim;
 import net.java.dev.sommer.foafssl.util.SafeInputStream;
 import org.openrdf.model.URI;
@@ -50,11 +53,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.Certificate;
+import java.util.logging.Logger;
+import net.java.dev.sommer.foafssl.util.TeeInputStream;
 
 /**
  * @author Henry Story
  */
 public abstract class GraphCache {
+
+ 
+    static final Logger log = Logger.getLogger(GraphCache.class.getName());
     /**
      * 1/4 MB max length of FOAF files read.
      */
@@ -148,8 +156,7 @@ public abstract class GraphCache {
                      * in the code.
                      */
                     hconn.setInstanceFollowRedirects(true);
-                    hconn
-                            .addRequestProperty("Accept:",
+                    hconn.addRequestProperty("Accept:",
                                     "application/rdf+xml; q=1.0, text/html;q=0.7, application/xhtml+xml;q=0.8");
                 }
 
@@ -158,6 +165,14 @@ public abstract class GraphCache {
                 rdfFormat = RDFFormat.forMIMEType(mimeType);
                 foafDocInputStream = conn.getInputStream();
 
+                // cache everything
+                //TODO, make this a setable property, so one can decide to have it on or not
+                File tmpF = File.createTempFile("temp.", "."+rdfFormat.getFileExtensions().get(0));
+                FileOutputStream cacheout = new FileOutputStream(tmpF);
+                log.log(Level.INFO, "Storing output to file {0}", tmpF.getCanonicalPath());
+                cacheout.write(purl.toString().getBytes());
+                cacheout.write("\r\n\r\n".getBytes());
+                foafDocInputStream = new TeeInputStream(foafDocInputStream,cacheout);
             } catch (IOException e) {
                 webidClaim.fail("could not connect to resource " + purl, e);
                 return null;
@@ -174,6 +189,7 @@ public abstract class GraphCache {
             try {
                 SafeInputStream stream = new SafeInputStream(foafDocInputStream, MAX_LENGTH);
                 repconn.add(stream, base.toString(), rdfFormat, foafdocUri);
+                webidClaim.setGraphName(base);
                 if (stream.wasCutShort()) {
                     webidClaim.warn("Input from resource was cut off at " + stream.getMax()
                             + " Data could be missing.");

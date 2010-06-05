@@ -1,0 +1,8 @@
+@prefix ont: <ont.n3#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#>.
+@prefix r: <proof1.n3#> .
+@prefix : <#> .
+
+r:client ont:believes _:b .
+_:b log:includes {?s ?r ?o } .
+
