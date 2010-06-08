@@ -53,8 +53,8 @@ import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import net.java.dev.sommer.foafssl.cache.GraphCacheLookup;
-import net.java.dev.sommer.foafssl.cache.MemoryGraphCache;
+//import net.java.dev.sommer.foafssl.cache.GraphCacheLookup;
+//import net.java.dev.sommer.foafssl.cache.MemoryGraphCache;
 
 
 /**
@@ -127,14 +127,14 @@ public abstract class AbstractIdpServlet extends HttpServlet {
         Certificate cert = null;
         PrivateKey privateKey = null;
 
-        try {
-
-            // todo: this should be done via lookup
-            GraphCacheLookup.setCache(new MemoryGraphCache());
-
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
+//        try {
+//
+//            // todo: this should be done via lookup
+//            GraphCacheLookup.setCache(new MemoryGraphCache());
+//
+//        } catch (Exception e) {
+//            throw new ServletException(e);
+//        }
 
         try {
 
