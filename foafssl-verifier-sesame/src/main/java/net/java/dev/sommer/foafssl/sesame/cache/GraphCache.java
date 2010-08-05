@@ -35,6 +35,7 @@ package net.java.dev.sommer.foafssl.sesame.cache;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.Level;
+
 import net.java.dev.sommer.foafssl.claims.WebIdClaim;
 import net.java.dev.sommer.foafssl.util.SafeInputStream;
 import org.openrdf.model.URI;
@@ -54,6 +55,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.Certificate;
 import java.util.logging.Logger;
+
 import net.java.dev.sommer.foafssl.util.TeeInputStream;
 
 /**
@@ -61,7 +63,7 @@ import net.java.dev.sommer.foafssl.util.TeeInputStream;
  */
 public abstract class GraphCache {
 
- 
+
     static final Logger log = Logger.getLogger(GraphCache.class.getName());
     /**
      * 1/4 MB max length of FOAF files read.
@@ -81,16 +83,15 @@ public abstract class GraphCache {
     /**
      * Given a URL this method fetches the contents of it from the cache or the
      * web.
-     * 
+     * <p/>
      * <p>
      * Really what I would like is for this to return a graph of information
      * (not as currently: a connector to the whole database
      * </p>
      * TODO: replace the WebId argument with an interface that takes something
      * and error message logs.
-     * 
-     * @param webidClaim
-     *            the WebId to fetch
+     *
+     * @param webidClaim the WebId to fetch
      * @return the repository connection containing the graph of the resource
      */
     public SailRepositoryConnection fetch(WebIdClaim webidClaim) {
@@ -133,6 +134,7 @@ public abstract class GraphCache {
             try {
                 URLConnection conn;
                 conn = purl.openConnection();
+
                 if (conn instanceof HttpURLConnection) {
 
                     /*
@@ -143,11 +145,6 @@ public abstract class GraphCache {
                      * secure too, not widely deployed but it would be nice if
                      * it were.
                      */
-                    if (conn instanceof HttpsURLConnection) {
-                        Certificate[] serverCertificates = ((HttpsURLConnection) conn)
-                                .getServerCertificates();
-                        webidClaim.setServerCertificateChain(serverCertificates);
-                    }
 
                     HttpURLConnection hconn = (HttpURLConnection) conn;
                     /*
@@ -156,23 +153,31 @@ public abstract class GraphCache {
                      * in the code.
                      */
                     hconn.setInstanceFollowRedirects(true);
-                    hconn.addRequestProperty("Accept:",
-                                    "application/rdf+xml; q=1.0, text/html;q=0.7, application/xhtml+xml;q=0.8");
+                    hconn.setRequestProperty("Accept",
+                            "application/rdf+xml; q=1.0, text/html;q=0.7, application/xhtml+xml;q=0.8");
+                }
+                conn.connect();
+
+                if (conn instanceof HttpsURLConnection) {
+                    Certificate[] serverCertificates = ((HttpsURLConnection) conn)
+                            .getServerCertificates();
+                    webidClaim.setServerCertificateChain(serverCertificates);
                 }
 
-                conn.connect();
                 String mimeType = mimeType(conn.getContentType());
                 rdfFormat = RDFFormat.forMIMEType(mimeType);
                 foafDocInputStream = conn.getInputStream();
 
                 // cache everything
                 //TODO, make this a setable property, so one can decide to have it on or not
-                File tmpF = File.createTempFile("temp.", "."+rdfFormat.getFileExtensions().get(0));
-                FileOutputStream cacheout = new FileOutputStream(tmpF);
-                log.log(Level.INFO, "Storing output to file {0}", tmpF.getCanonicalPath());
-                cacheout.write(purl.toString().getBytes());
-                cacheout.write("\r\n\r\n".getBytes());
-                foafDocInputStream = new TeeInputStream(foafDocInputStream,cacheout);
+                if (false) {
+                    File tmpF = File.createTempFile("temp.", "." + rdfFormat.getFileExtensions().get(0));
+                    FileOutputStream cacheout = new FileOutputStream(tmpF);
+                    log.log(Level.INFO, "Storing output to file {0}", tmpF.getCanonicalPath());
+                    cacheout.write(purl.toString().getBytes());
+                    cacheout.write("\r\n\r\n".getBytes());
+                    foafDocInputStream = new TeeInputStream(foafDocInputStream, cacheout);
+                }
             } catch (IOException e) {
                 webidClaim.fail("could not connect to resource " + purl, e);
                 return null;
@@ -226,9 +231,8 @@ public abstract class GraphCache {
 
     /**
      * Get the mime type
-     * 
-     * @param contentType
-     *            the content type header
+     *
+     * @param contentType the content type header
      * @return the basic mime type
      */
     private String mimeType(String contentType) {

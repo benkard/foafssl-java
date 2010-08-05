@@ -23,7 +23,7 @@
     <dependencies>
         <dependency>
             <groupId>net.java.dev.sommer</groupId>
-            <artifactId>foafssl-verifier</artifactId>
+            <artifactId>foafssl-verifier-sesame</artifactId>
         </dependency>
         <dependency>
             <groupId>net.java.dev.sommer</groupId>
