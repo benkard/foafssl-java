@@ -56,6 +56,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.java.dev.sommer.foafssl.claims.WebIdClaim;
 import net.java.dev.sommer.foafssl.claims.X509Claim;
@@ -131,9 +132,8 @@ public class ShortRedirectIdpServlet extends AbstractIdpServlet {
          */
         X509Certificate[] certificates = (X509Certificate[]) request
                 .getAttribute("javax.servlet.request.X509Certificate");
-
+    
         X509Claim x509Claim = null;
-
         if (certificates == null || certificates.length == 0) {
             if (replyTo != null) {
                 redirect(response, replyTo + "?" + ERROR_PARAMNAME + "=nocert");

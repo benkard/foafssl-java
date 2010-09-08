@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.java.dev.sommer</groupId>
         <artifactId>foafssl</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>foafssl-verifier</artifactId>
@@ -27,11 +27,11 @@
     </repositories>
 
     <dependencies>
-        <dependency>
+        <!--dependency>
             <groupId>net.java.dev.sommer</groupId>
             <artifactId>foafssl-keygen</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>net.rootdev</groupId>
             <artifactId>java-rdfa</artifactId>
