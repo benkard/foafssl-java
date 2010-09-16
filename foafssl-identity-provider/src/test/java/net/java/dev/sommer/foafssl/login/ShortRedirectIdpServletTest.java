@@ -32,7 +32,12 @@
  -----------------------------------------------------------------------*/
 package net.java.dev.sommer.foafssl.login;
 
-import net.java.dev.sommer.foafssl.keygen.CertCreator;
+import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultPubKey;
+import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultCertificate;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import net.java.dev.sommer.foafssl.keygen.bouncy.BouncyKeygenService;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.junit.After;
@@ -81,8 +86,21 @@ public class ShortRedirectIdpServletTest {
     public static final String TEST_FOAF_FILENAME = "dummy-foaf.rdf.xml";
     public static final String TEST_CERT_FILENAME = "dummy-foafsslcert.pem";
     public static final String TEST_WEBID = "http://foaf.example.net/bruno#me";
+	 public static final transient Logger LOG = Logger.getLogger(ShortRedirectIdpServletTest.class.getName());
+
 
     private ServletTester idpServletTester;
+	 private static BouncyKeygenService kgenSrvc;
+
+	 static {
+		 		  try {
+				kgenSrvc = new BouncyKeygenService();
+				kgenSrvc.initialize(); 
+		  } catch (Exception ex) {
+			   LOG.log(Level.SEVERE, "Can't initialise keygenservice", ex);
+		  } 
+
+	 }
 
     public ShortRedirectIdpServletTest() throws InvalidKeyException {
     }
@@ -244,12 +262,11 @@ public class ShortRedirectIdpServletTest {
          */
         response.parse(idpServletTester.getResponses(request.generate()));
 
-        System.out.println("Request URI: " + authnReqResourceRef.toString());
-        System.out.println("Response status: " + response.getStatus());
+        LOG.log(Level.INFO, "Request URI: {0}", authnReqResourceRef.toString());
+        LOG.log(Level.INFO, "Response status: {0}", response.getStatus());
         String location = response.getHeader("Location");
-        System.out.println("Response Location header: " + location);
-        System.out.println("Response Location header length: " + location.length());
-        System.out.println();
+        LOG.log(Level.INFO, "Response Location header: {0}", location);
+        LOG.info("Response Location header length: " + location.length());
 
         /*
          * Process the response.
@@ -350,9 +367,8 @@ public class ShortRedirectIdpServletTest {
 
       @Override
         public void init(FilterConfig config) throws ServletException {
-            CertCreator create = null;
             try {
-                create = new CertCreator();
+				DefaultCertificate create = new DefaultCertificate(kgenSrvc);
                 create.addDurationInHours("1");
                 create.setSubjectCommonName("TEST");
                 // avoid using the mock stream handler with commented code
@@ -361,7 +377,7 @@ public class ShortRedirectIdpServletTest {
                 // webIdDoc.getFile());
                 // URL webId = new URL(webIdDoc, "#me");
                 create.setSubjectWebID(TEST_WEBID);
-                create.setSubjectPublicKey(goodKey);
+                create.setSubjectPublicKey(DefaultPubKey.create(goodKey));
                 create.generate();
                 x509Certificate = create.getCertificate();
             } catch (InvalidKeyException e) {

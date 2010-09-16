@@ -125,7 +125,7 @@ public abstract class AbstractIdpServlet extends HttpServlet {
         }
         String alias = getInitParameter(ALIAS_INITPARAM);
         Certificate cert = null;
-        PrivateKey privateKey = null;
+        PrivateKey lclPrivateKey = null;
 
 //        try {
 //
@@ -148,7 +148,7 @@ public abstract class AbstractIdpServlet extends HttpServlet {
                 }
 
                 try {
-                    privateKey = (PrivateKey) ctx.lookup(PRIVATEKEY_JNDI_NAME);
+                    lclPrivateKey = (PrivateKey) ctx.lookup(PRIVATEKEY_JNDI_NAME);
                 } catch (NameNotFoundException e) {
                     LOG.log(Level.FINE, "JNDI name not found", e);
                 }
@@ -236,7 +236,7 @@ public abstract class AbstractIdpServlet extends HttpServlet {
             keyPasswordArray = keystorePasswordArray;
         }
 
-        if ((cert == null) || (privateKey == null)) {
+        if ((cert == null) || (lclPrivateKey == null)) {
             if (keyStore == null) {
                 try {
                     InputStream ksInputStream = null;
@@ -294,8 +294,8 @@ public abstract class AbstractIdpServlet extends HttpServlet {
                             "Invalid keystore configuration: alias unspecified or couldn't find key at alias: "
                                     + alias);
                 }
-                if (privateKey == null) {
-                    privateKey = (PrivateKey) keyStore.getKey(alias, keyPasswordArray);
+                if (lclPrivateKey == null) {
+                    lclPrivateKey = (PrivateKey) keyStore.getKey(alias, keyPasswordArray);
                 }
                 if (cert == null) {
                     cert = keyStore.getCertificate(alias);
@@ -314,6 +314,6 @@ public abstract class AbstractIdpServlet extends HttpServlet {
 
         this.certificate = cert;
         this.publicKey = cert.getPublicKey();
-        this.privateKey = privateKey;
+        this.privateKey = lclPrivateKey;
     }
 }

@@ -27,11 +27,6 @@
     </repositories>
 
     <dependencies>
-        <!--dependency>
-            <groupId>net.java.dev.sommer</groupId>
-            <artifactId>foafssl-keygen</artifactId>
-            <scope>test</scope>
-        </dependency-->
         <dependency>
             <groupId>net.rootdev</groupId>
             <artifactId>java-rdfa</artifactId>
@@ -52,7 +47,6 @@
             <!-- choose which version of the jdk you are deploying to by commenting one of the line below-->
             <artifactId>bcprov-jdk16</artifactId>
             <!--artifactId>bcprov-jdk15</artifactId-->
-            <version>1.45</version>
             <scope>test</scope>
         </dependency>
 

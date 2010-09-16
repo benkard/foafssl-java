@@ -32,16 +32,18 @@
 
 package net.java.dev.sommer.foafssl.sesame.verifier;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.java.dev.sommer.foafssl.keygen.bouncy.BouncyKeygenService;
 import net.java.dev.sommer.foafssl.sesame.cache.GraphCacheLookup;
 import net.java.dev.sommer.foafssl.sesame.cache.MemoryGraphCache;
 import net.java.dev.sommer.foafssl.claims.X509Claim;
-import net.java.dev.sommer.foafssl.keygen.CertCreator;
+import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultCertificate;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.security.KeyFactory;
@@ -50,6 +52,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultPubKey;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -66,8 +69,8 @@ public class X509ClaimTest {
     public static final String TEST_FOAF_LOCATION = "http://foaf.example.net/bruno";
     public static final URI TEST_WEB_ID_URI = URI.create(TEST_FOAF_LOCATION + "#me");
     public static final String TEST_CERT_FILENAME = "dummy-foafsslcert.pem";
-    public static final URL TEST_FOAF_URL;
-    X509Claim x509claim;
+    public static URL TEST_FOAF_URL;
+	 private static BouncyKeygenService kgenSrvc;
 
     final RSAPublicKey goodKey;
 
@@ -83,9 +86,15 @@ public class X509ClaimTest {
     static {
         try {
             TEST_FOAF_URL = new URL(TEST_FOAF_LOCATION);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        } catch (Exception e) {
+            Logger.getLogger(X509ClaimTest.class.getName()).log(Level.SEVERE,"Malformed URL EXception in static",e);
+        } 
+		  try {
+				kgenSrvc = new BouncyKeygenService();
+				kgenSrvc.initialize(); 
+		  } catch (Exception ex) {
+			   Logger.getLogger(X509ClaimTest.class.getName()).log(Level.SEVERE, null, ex);
+		  } 
     }
 
     @Before
@@ -107,14 +116,14 @@ public class X509ClaimTest {
      * @throws Exception
      */
     private X509Claim createOneHourCert(String foaf) throws Exception {
-        CertCreator create = new CertCreator();
+        DefaultCertificate create = new DefaultCertificate(kgenSrvc);
         create.addDurationInHours("1");
         create.setSubjectCommonName("TEST");
         URL webIdDoc = X509ClaimTest.class.getResource(foaf);
         webIdDoc = new URL(webIdDoc.getProtocol(), "localhost", webIdDoc.getFile());
         URL webId = new URL(webIdDoc, "#me");
         create.setSubjectWebID(webId.toString());
-        create.setSubjectPublicKey(goodKey);
+        create.setSubjectPublicKey(DefaultPubKey.create(goodKey));
         create.generate();
         X509Certificate cert = create.getCertificate();
         X509Claim x509claim = new X509Claim(cert);

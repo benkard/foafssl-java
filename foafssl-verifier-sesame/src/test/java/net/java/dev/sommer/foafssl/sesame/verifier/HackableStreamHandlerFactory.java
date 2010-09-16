@@ -36,11 +36,7 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
 /**
-* Created by IntelliJ IDEA.
-* User: hjs
-* Date: Mar 21, 2010
-* Time: 7:45:27 PM
-* To change this template use File | Settings | File Templates.
+* @author Bruno Harbulot.
 */
 public class HackableStreamHandlerFactory implements URLStreamHandlerFactory {
     private SettableMimeTypeURLStreamHandler handler;
@@ -52,6 +48,7 @@ public class HackableStreamHandlerFactory implements URLStreamHandlerFactory {
          handler.setUp(mime,file);
     }
 
+	@Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
         if ("http".equals(protocol) || "https".equals(protocol)) {
             return handler;

@@ -56,7 +56,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.java.dev.sommer.foafssl.claims.WebIdClaim;
 import net.java.dev.sommer.foafssl.claims.X509Claim;

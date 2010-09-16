@@ -14,6 +14,7 @@
         <sesame.version>2.3.1</sesame.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <bouncycastle.version>1.44</bouncycastle.version>
     </properties>
 
     <licenses>
@@ -58,6 +59,11 @@
             <url>http://repo.aduna-software.org/maven2/releases</url>
         </repository>
         <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+        </repository>
+	<repository>
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
@@ -68,16 +74,6 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-        </repository>
-        <repository>
-            <id>rootdev.net</id>
-            <name>rootdev.net repository</name>
-            <url>http://rootdev.net/maven/snapshot-repo/</url>
-        </repository>
     </repositories>
 
     <modules>
@@ -86,7 +82,6 @@
         <module>foafssl-identity-provider</module>
         <module>foafssl-identity-provider-webapp</module>
         <module>foafssl-filter</module>
-        <!--module>foafssl-keygen</module--><!-- removed. Now moved to jsslutils -->
     </modules>
 
     <dependencyManagement>
@@ -152,7 +147,7 @@
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk16</artifactId>
-                <version>1.44</version>
+                <version>${bouncycastle.version}</version>
             </dependency>
 
             <dependency>

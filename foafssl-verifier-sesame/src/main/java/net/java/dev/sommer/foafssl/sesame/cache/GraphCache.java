@@ -132,6 +132,7 @@ public abstract class GraphCache {
         try {
 
             try {
+					 //todo: This should be placed in a thread with a timeout in case the host is down, or due to DNS problems					 
                 URLConnection conn;
                 conn = purl.openConnection();
 
@@ -193,6 +194,7 @@ public abstract class GraphCache {
             }
             try {
                 SafeInputStream stream = new SafeInputStream(foafDocInputStream, MAX_LENGTH);
+					 repconn.clear(foafdocUri);
                 repconn.add(stream, base.toString(), rdfFormat, foafdocUri);
                 webidClaim.setGraphName(base);
                 if (stream.wasCutShort()) {
