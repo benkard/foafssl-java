@@ -37,9 +37,9 @@
 	    <artifactId>foafssl-verifier</artifactId>
 	</dependency>
         <dependency>
-	    <groupId>net.java.dev.sommer</groupId>
-	    <artifactId>keygenapp-base</artifactId>
-	    <version>${foafssl.version}</version>
+	    <groupId>org.apache.clerezza</groupId>
+	    <artifactId>ssl.keygen.base</artifactId>
+	    <version>0.5-incubating-SNAPSHOT</version>
 	    <scope>test</scope>
 	</dependency>
 	<dependency>

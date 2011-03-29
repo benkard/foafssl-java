@@ -35,7 +35,6 @@ package net.java.dev.sommer.foafssl.sesame.cache;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;

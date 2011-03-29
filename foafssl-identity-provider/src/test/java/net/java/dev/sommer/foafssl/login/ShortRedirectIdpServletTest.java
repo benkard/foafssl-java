@@ -32,11 +32,11 @@
  -----------------------------------------------------------------------*/
 package net.java.dev.sommer.foafssl.login;
 
-import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultPubKey;
-import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultCertificate;
+import org.apache.clerezza.ssl.keygen.bouncy.DefaultPubKey;
+import org.apache.clerezza.ssl.keygen.bouncy.DefaultCertificate;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import net.java.dev.sommer.foafssl.keygen.bouncy.BouncyKeygenService;
+import org.apache.clerezza.ssl.keygen.bouncy.BouncyKeygenService;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;

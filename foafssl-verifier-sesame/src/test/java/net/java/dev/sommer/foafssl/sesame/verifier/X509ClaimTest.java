@@ -34,11 +34,11 @@ package net.java.dev.sommer.foafssl.sesame.verifier;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.java.dev.sommer.foafssl.keygen.bouncy.BouncyKeygenService;
+import org.apache.clerezza.ssl.keygen.bouncy.BouncyKeygenService;
 import net.java.dev.sommer.foafssl.sesame.cache.GraphCacheLookup;
 import net.java.dev.sommer.foafssl.sesame.cache.MemoryGraphCache;
 import net.java.dev.sommer.foafssl.claims.X509Claim;
-import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultCertificate;
+import org.apache.clerezza.ssl.keygen.bouncy.DefaultCertificate;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.KeySpec;
 import java.security.spec.RSAPublicKeySpec;
-import net.java.dev.sommer.foafssl.keygen.bouncy.DefaultPubKey;
+import org.apache.clerezza.ssl.keygen.bouncy.DefaultPubKey;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

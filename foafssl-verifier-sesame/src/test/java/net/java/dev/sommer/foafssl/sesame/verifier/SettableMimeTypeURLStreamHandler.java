@@ -40,11 +40,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
 /**
-* Created by IntelliJ IDEA.
-* User: hjs
-* Date: Mar 21, 2010
-* Time: 7:45:04 PM
-* To change this template use File | Settings | File Templates.
+* @author  Bruno Harbulot
 */
 class SettableMimeTypeURLStreamHandler extends URLStreamHandler {
     String mimeType;
