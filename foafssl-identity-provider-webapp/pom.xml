@@ -12,6 +12,7 @@
     <packaging>war</packaging>
     <name>FOAF+SSL :: Identity Provider Sample Webapp</name>
     <url>http://sommer.dev.java.net/</url>
+	<version>${foafssl.version}</version>
 
     <licenses>
         <license>

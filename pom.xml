@@ -5,16 +5,16 @@
     <groupId>net.java.dev.sommer</groupId>
     <artifactId>foafssl</artifactId>
     <packaging>pom</packaging>
-    <version>0.5</version>
+	<version>${foafssl.version}</version>
     <name>FOAF+SSL</name>
     <url>http://sommer.dev.java.net/</url>
 
     <properties>
-        <foafssl.version>0.5</foafssl.version>
+        <foafssl.version>0.5-SNAPSHOT</foafssl.version>
         <sesame.version>2.3.1</sesame.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <bouncycastle.version>1.44</bouncycastle.version>
+        <bouncycastle.version>1.46</bouncycastle.version>
     </properties>
 
     <licenses>
@@ -87,8 +87,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>net.java.dev.sommer</groupId>
-                <artifactId>foafssl-keygen</artifactId>
+                <groupId>org.apache.clerezza</groupId>
+                <artifactId>ssl.keygen.base</artifactId>
                 <version>${foafssl.version}</version>
             </dependency>
             <dependency>
@@ -150,11 +150,11 @@
                 <version>${bouncycastle.version}</version>
             </dependency>
 
-            <dependency>
+            <!--dependency>
                 <groupId>javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>3.8.0.GA</version>
-            </dependency>
+            </dependency-->
             <!-- OpenRDF modules referenced by Sommer -->
             <dependency>
                 <groupId>org.openrdf.sesame</groupId>
