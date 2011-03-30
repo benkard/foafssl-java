@@ -4,14 +4,14 @@
     <parent>
         <groupId>net.java.dev.sommer</groupId>
         <artifactId>foafssl</artifactId>
-		<version>${foafssl.version}</version>
+		<version>0.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>foafssl-verifier</artifactId>
     <packaging>bundle</packaging>
     <name>FOAF+SSL :: Verifier</name>
     <url>http://sommer.dev.java.net/</url>
-	<version>${foafssl.version}</version>
+	<version>0.5-SNAPSHOT</version>
 
     <licenses>
         <license>
