@@ -105,9 +105,11 @@ public class SesameFoafSslVerifier extends FoafSslVerifier {
                                 + "SELECT ?m ?e ?mod ?exp "
                                 + "FROM <"+webid.getGraphName().toString()+">"
                                 + "WHERE { "
-                                + "   [] cert:identity ?agent ;"
-                                + "        rsa:modulus ?m ;"
-                                + "        rsa:public_exponent ?e ."
+		                        + " { ?key cert:identity ?agent } "
+		                        + " UNION "
+		                        + " { ?agent cert:key ?key }"
+                                + "  ?key rsa:modulus ?m ;"
+                                + "       rsa:public_exponent ?e ."
                                 + "   OPTIONAL { ?m cert:hex ?mod . }"
                                 + "   OPTIONAL { ?e cert:decimal ?exp . }"
                                 + "}");
@@ -204,17 +206,17 @@ public class SesameFoafSslVerifier extends FoafSslVerifier {
      * 
      * @param num
      *            the string representation of the number
-     * @param type
+     * @param tpe
      *            the type of the string representation
      * @return the number
      */
-    private static BigInteger toInteger_helper(String num, String type) {
-        if (type.equals(cert + "decimal") || type.equals(cert + "int")
-                || type.equals(xsd + "integer") || type.equals(xsd + "int")
-                || type.equals(xsd + "nonNegativeInteger")) {
+    private static BigInteger toInteger_helper(String num, String tpe) {
+        if (tpe.equals(cert + "decimal") || tpe.equals(cert + "int")
+                || tpe.equals(xsd + "integer") || tpe.equals(xsd + "int")
+                || tpe.equals(xsd + "nonNegativeInteger")) {
             // cert:decimal is deprecated
             return new BigInteger(num.trim(), 10);
-        } else if (type.equals(cert + "hex")) {
+        } else if (tpe.equals(cert + "hex")) {
             String strval = cleanHex(num);
             return new BigInteger(strval, 16);
         } else {

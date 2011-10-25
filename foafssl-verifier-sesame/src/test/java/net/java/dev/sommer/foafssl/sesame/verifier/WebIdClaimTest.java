@@ -234,4 +234,20 @@ public class WebIdClaimTest {
         assertFalse(pr.verify());
     }
 
+	@Test
+    public void test_certIdentity_turtle() throws Exception {
+     mockStreamHandlerFactory.setUp("application/x-turtle", "bblfish-foaf-literal-cert_identity.turtle"); //the mime type should be text/turtle, newer versions if Sesame may have this updated
+     WebIdClaim pr = new WebIdClaim(TEST_WEB_ID_URI, pubkey);
+     assertTrue(pr.verify());
+    }
+
+	@Test
+    public void test_certKey_Local_turtle() throws Exception {
+     mockStreamHandlerFactory.setUp("application/x-turtle", "bblfish-foaf-literal-cert_key.turtle"); //the mime type should be text/turtle, newer versions if Sesame may have this updated
+     WebIdClaim pr = new WebIdClaim(TEST_WEB_ID_URI, pubkey);
+     assertTrue(pr.verify());
+ }
+
+
+
 }

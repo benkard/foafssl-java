@@ -1,5 +1,7 @@
 .idea/workspace.xml
 *.iml
+*.iwr
+*.ips
 .classpath
 .project
 .settings
@@ -11,4 +13,5 @@ derby.log
 *.bak
 *.log
 *~
+.idea*
 .checkstyle

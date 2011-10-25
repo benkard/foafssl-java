@@ -155,7 +155,7 @@ public abstract class GraphCache {
                      */
                     hconn.setInstanceFollowRedirects(true);
                     hconn.setRequestProperty("Accept",
-                            "application/rdf+xml; q=1.0, text/html;q=0.7, application/xhtml+xml;q=0.8");
+                            "application/rdf+xml;q=1.0, text/turtle;q=0.9, text/html;q=0.7, application/xhtml+xml;q=0.8");
                 }
                 conn.connect();
 

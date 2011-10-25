@@ -38,8 +38,8 @@
 			<artifactId>foafssl-verifier</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.clerezza</groupId>
-			<artifactId>ssl.keygen.base</artifactId>
+			<groupId>net.java.dev.sommer</groupId>
+			<artifactId>keygen</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
