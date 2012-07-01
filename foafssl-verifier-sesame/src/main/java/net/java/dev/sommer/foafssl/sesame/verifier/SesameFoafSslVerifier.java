@@ -108,10 +108,15 @@ public class SesameFoafSslVerifier extends FoafSslVerifier {
 		                        + " { ?key cert:identity ?agent } "
 		                        + " UNION "
 		                        + " { ?agent cert:key ?key }"
-                                + "  ?key rsa:modulus ?m ;"
-                                + "       rsa:public_exponent ?e ."
-                                + "   OPTIONAL { ?m cert:hex ?mod . }"
-                                + "   OPTIONAL { ?e cert:decimal ?exp . }"
+                                + "  { ?key rsa:modulus ?m ;"
+                                + "         rsa:public_exponent ?e ."
+                                + "     OPTIONAL { ?m cert:hex ?mod . }"
+                                + "     OPTIONAL { ?e cert:decimal ?exp . } }"
+                                + "  UNION "
+                                + "  { ?key cert:modulus ?m ;"
+                                + "         cert:exponent ?e ."
+                                + "     OPTIONAL { ?m cert:hex ?mod . }"
+                                + "     OPTIONAL { ?e cert:decimal ?exp . } }"
                                 + "}");
             } catch (MalformedQueryException e) {
                 log.log(Level.SEVERE, "Error in Query String!", e);
@@ -216,7 +221,7 @@ public class SesameFoafSslVerifier extends FoafSslVerifier {
                 || tpe.equals(xsd + "nonNegativeInteger")) {
             // cert:decimal is deprecated
             return new BigInteger(num.trim(), 10);
-        } else if (tpe.equals(cert + "hex")) {
+        } else if (tpe.equals(cert + "hex") || tpe.equals(xsd + "hexBinary")) {
             String strval = cleanHex(num);
             return new BigInteger(strval, 16);
         } else {
